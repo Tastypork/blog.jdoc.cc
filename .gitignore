@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+
+# Copied from repo root by scripts/sync-assets.mjs (CI and local dev)
+public/images/
+public/css/
+public/lib/
+public/js/

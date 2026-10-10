@@ -1,0 +1,9 @@
+/blog / 301
+/blog/* /:splat 301
+/jesus-christ-p.html /jesus-christ 301
+/jesus-christ.html /jesus-christ 301
+/waiting-faith-p.html /waiting-faith 301
+/waiting-faith.html /waiting-faith 301
+/walking-christ-p.html /walking-christ 301
+/walking-christ.html /walking-christ 301
+/crosswords.html / 301

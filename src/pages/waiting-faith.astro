@@ -1,0 +1,13 @@
+---
+import LegacyLayout from "../layouts/LegacyLayout.astro";
+import body from "../legacy/waiting-faith-body.html?raw";
+---
+
+<LegacyLayout
+  title="Waiting On Faith | Joshua O'Callaghan"
+  description="Waiting On Faith"
+  canonicalPath="/waiting-faith"
+  headVariant="article"
+>
+  <div style="display:contents" set:html={body} />
+</LegacyLayout>

@@ -1,0 +1,13 @@
+---
+import LegacyLayout from "../layouts/LegacyLayout.astro";
+import body from "../legacy/jesus-christ-body.html?raw";
+---
+
+<LegacyLayout
+  title="Who Is Jesus Christ? | Joshua O'Callaghan"
+  description="Who Is Jesus Christ?"
+  canonicalPath="/jesus-christ"
+  headVariant="article"
+>
+  <div style="display:contents" set:html={body} />
+</LegacyLayout>
