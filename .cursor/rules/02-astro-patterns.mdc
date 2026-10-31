@@ -1,0 +1,14 @@
+---
+description: Astro architecture and component conventions
+globs: "src/**/*.{astro,ts,js}"
+alwaysApply: false
+---
+- Follow current Astro conventions and inspect installed versions before choosing APIs.
+- Use .astro components for static presentation and content. Add `client:*` hydration only when a component genuinely needs browser-side interactivity.
+- Keep pages composed from reusable layout, section, and UI components when reuse improves consistency; avoid abstracting one-off content prematurely.
+- Keep page-specific content easy to find and edit. Use Astro content collections for structured repeated content when suitable for the project.
+- Put shared site-wide elements such as header, footer, SEO metadata, and global styles in predictable locations.
+- Keep semantic HTML meaningful: one clear primary h1 per page, ordered headings, real buttons for actions, and links for navigation.
+- Do not add dependencies without explaining the benefit. Prefer platform APIs and existing packages where reasonable.
+- Avoid large client-side bundles for static marketing pages.
+- Match the repository's TypeScript and formatting conventions. Do not silence type errors with `any` or broad ignores to get a build passing.

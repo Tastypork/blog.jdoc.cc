@@ -1,0 +1,51 @@
+---
+import Honeypot from "./Honeypot.astro";
+import { NEWSLETTER_FORM, HONEYPOT_FIELD } from "../lib/site";
+
+interface Props {
+  idPrefix?: string;
+}
+const { idPrefix = "nl" } = Astro.props;
+---
+
+<form
+  name={NEWSLETTER_FORM}
+  method="POST"
+  action="/thank-you"
+  data-netlify="true"
+  netlify-honeypot={HONEYPOT_FIELD}
+  data-netlify-recaptcha="true"
+  class="nl"
+>
+  <input type="hidden" name="form-name" value={NEWSLETTER_FORM} />
+  <input type="hidden" name="subject" value="[Jocal.dev] New inquiry — %{siteName} — #%{submissionId}" />
+  <Honeypot id={`${idPrefix}-fax`} />
+
+  <label class="field nl__email">
+    <span class="sr-only">Your email</span>
+    <input id={`${idPrefix}-email`} type="email" name="email" placeholder="Enter your email" required autocomplete="email" />
+  </label>
+
+  <div data-netlify-recaptcha="true"></div>
+
+  <button type="submit" class="btn">Subscribe</button>
+</form>
+
+<style>
+  .nl {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .nl__email {
+    width: min(100%, 300px);
+  }
+  .nl [data-netlify-recaptcha] {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: center;
+  }
+</style>

@@ -1,0 +1,13 @@
+---
+description: SEO, accessibility, and content quality for public websites
+globs: "src/**/*.{astro,html,ts,js,css}"
+alwaysApply: false
+---
+- Each public page should have a unique, meaningful title and meta description; use canonical URLs and social metadata when the project supports them.
+- Use descriptive link text, semantic landmarks, logical heading order, and meaningful alt text. Use empty alt text for purely decorative images.
+- Ensure all interactions work with keyboard input, have visible focus states, and use accessible names.
+- Check color contrast, zoom/responsive behavior, form labels, validation messages, and reduced-motion preferences.
+- Use descriptive URLs and avoid duplicate titles or placeholder metadata in production pages.
+- Do not promise rankings or claim that basic metadata guarantees SEO results.
+- Do not invent local addresses, service areas, opening hours, medical/legal claims, reviews, or business credentials.
+- For local business sites, use only client-confirmed NAP details (name, address, phone), hours, service areas, and structured data.

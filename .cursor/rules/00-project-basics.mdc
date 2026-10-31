@@ -1,0 +1,11 @@
+---
+description: Core instructions for every project file
+alwaysApply: true
+---
+- First inspect the repository, package.json, Astro configuration, existing components, and styling approach before editing.
+- Preserve the existing architecture and dependencies unless a change is necessary and explained.
+- Prefer simple, maintainable Astro-first solutions. Use server-rendered/static Astro components by default; add client-side JavaScript only for real interaction.
+- Do not introduce React, Vue, Svelte, or another UI framework unless the project already uses it or the user explicitly requests it.
+- Never invent client facts, testimonials, credentials, statistics, certifications, prices, guarantees, or service claims. Flag missing content with clear placeholders.
+- Keep secrets and private client data out of source control. Never place private API keys in browser-side code.
+- Before finishing, summarize changes, checks run, checks not run, and any remaining risks.

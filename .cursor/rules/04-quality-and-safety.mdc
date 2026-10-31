@@ -1,0 +1,12 @@
+---
+description: Verification, privacy, and safe changes
+globs: "**/*"
+alwaysApply: false
+---
+- Inspect `package.json` and use the repository's existing scripts and package manager.
+- Run relevant checks such as lint, type-check, tests, and production build when available. Do not claim a check passed unless it ran successfully.
+- For UI changes, inspect the page at narrow and wide viewport sizes; use browser automation if configured.
+- Test forms and interactive controls, including invalid and success states, when feasible.
+- Avoid destructive commands, production changes, and external deployments without explicit approval.
+- Do not paste credentials or sensitive customer data into logs, screenshots, test fixtures, or committed files.
+- Review the final diff for accidental unrelated changes and unfinished placeholders.

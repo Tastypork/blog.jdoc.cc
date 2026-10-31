@@ -1,0 +1,102 @@
+---
+import { Image } from "astro:assets";
+import wordmark from "../assets/brand/crosswords-logo.png";
+import portrait from "../assets/brand/joshua-portrait.png";
+
+interface Props {
+  /** Article and utility pages use the portrait and a way home, matching the original subpage nav. */
+  back?: boolean;
+}
+
+const { back = false } = Astro.props;
+const onPosts = Astro.url.pathname === "/posts" || Astro.url.pathname === "/posts/";
+---
+
+<header class="nav">
+  <div class="wrap nav__row">
+    <a href="/" class="nav__brand" aria-label="CrossWords home">
+      {
+        back ? (
+          <Image
+            src={portrait}
+            width={120}
+            height={120}
+            alt=""
+            class="nav__portrait"
+            loading="eager"
+          />
+        ) : (
+          <Image
+            src={wordmark}
+            width={280}
+            alt=""
+            class="nav__mark"
+            loading="eager"
+          />
+        )
+      }
+    </a>
+    <nav class="nav__links" aria-label="Site">
+      {back && <a href="/">Return Home</a>}
+      <a href="/posts" aria-current={onPosts ? "page" : undefined}>Posts</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .nav {
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 4.5rem;
+  }
+  .nav__brand {
+    display: flex;
+    align-items: center;
+    line-height: 0;
+  }
+  .nav__mark {
+    height: 3.25rem;
+    width: auto;
+  }
+  .nav__portrait {
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .nav__links a {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--body);
+  }
+  .nav__links a:hover {
+    color: var(--accent);
+  }
+  .nav__links a[aria-current="page"] {
+    color: var(--ink);
+  }
+  .nav__links a[aria-current="page"]:hover {
+    color: var(--accent);
+  }
+  @media (max-width: 40rem) {
+    .nav__mark {
+      height: 2.75rem;
+    }
+    .nav__links {
+      gap: 0.85rem;
+    }
+  }
+</style>

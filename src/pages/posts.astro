@@ -1,0 +1,111 @@
+---
+import { Picture } from "astro:assets";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getPublishedPosts, postUrl } from "../lib/posts";
+import { SITE, formatDate, readingTime } from "../lib/site";
+
+const posts = await getPublishedPosts();
+---
+
+<BaseLayout
+  title={`Posts — ${SITE.name}`}
+  description="Every CrossWords essay, newest first."
+  path="/posts"
+>
+  <div class="archive">
+    <div class="wrap">
+      <h1>Posts</h1>
+      {
+        posts.map((post) => (
+          <section class="entry" aria-labelledby={`post-${post.id}`}>
+            <a href={postUrl(post)} class="entry__photo" tabindex="-1" aria-hidden="true">
+              <Picture
+                src={post.data.heroImage}
+                width={720}
+                widths={[360, 720]}
+                sizes="(max-width: 40rem) 100vw, 22rem"
+                formats={["avif", "webp"]}
+                alt=""
+                style={`aspect-ratio: 3 / 2; object-fit: cover; object-position: ${post.data.heroPosition};`}
+                loading="lazy"
+              />
+            </a>
+            <div class="entry__txt">
+              <h2 id={`post-${post.id}`}>
+                <a href={postUrl(post)}>{post.data.title}</a>
+              </h2>
+              <p>{post.data.excerpt}</p>
+              <p class="entry__meta">
+                <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+                <span aria-hidden="true"> · </span>
+                <span>{readingTime(post.body ?? "")} min read</span>
+              </p>
+            </div>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .archive {
+    background: var(--bg);
+    padding-block: 3rem 3.5rem;
+  }
+  .archive h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .entry {
+    display: grid;
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    gap: 1.5rem 2rem;
+    align-items: center;
+    padding-block: 2rem;
+    border-top: 1px solid var(--line);
+  }
+  .entry:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .entry__photo img {
+    width: 100%;
+  }
+  .entry__txt {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .entry__txt h2 {
+    font-size: 1.1875rem;
+    font-weight: 500;
+    line-height: 1.35;
+    text-transform: uppercase;
+  }
+  .entry__txt h2 a {
+    color: var(--ink);
+  }
+  .entry__txt h2 a:hover {
+    color: var(--accent);
+  }
+  .entry__txt p {
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: var(--body);
+  }
+  .entry__meta {
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+  @media (max-width: 40rem) {
+    .archive {
+      padding-block: 2.25rem 2.5rem;
+    }
+    .entry {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+  }
+</style>

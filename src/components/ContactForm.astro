@@ -1,0 +1,60 @@
+---
+import Honeypot from "./Honeypot.astro";
+import { CONTACT_FORM, HONEYPOT_FIELD } from "../lib/site";
+
+interface Props {
+  idPrefix?: string;
+  /** Which post the message came from, for Joshua's inbox */
+  about?: string;
+}
+const { idPrefix = "ct", about } = Astro.props;
+---
+
+<form
+  name={CONTACT_FORM}
+  method="POST"
+  action="/thank-you"
+  data-netlify="true"
+  netlify-honeypot={HONEYPOT_FIELD}
+  data-netlify-recaptcha="true"
+  class="ct"
+>
+  <input type="hidden" name="form-name" value={CONTACT_FORM} />
+  <input type="hidden" name="subject" value="[Jocal.dev] New inquiry — %{siteName} — #%{submissionId}" />
+  {about && <input type="hidden" name="about" value={about} />}
+  <Honeypot id={`${idPrefix}-fax`} />
+
+  <div class="ct__pair">
+    <label class="field">
+      <span class="sr-only">Name, optional</span>
+      <input id={`${idPrefix}-name`} type="text" name="name" autocomplete="name" placeholder="Name (optional)" />
+    </label>
+    <label class="field">
+      <span class="sr-only">Email, optional</span>
+      <input id={`${idPrefix}-email`} type="email" name="email" autocomplete="email" placeholder="Email (optional)" />
+    </label>
+  </div>
+
+  <label class="field">
+    <span class="sr-only">Message</span>
+    <textarea id={`${idPrefix}-message`} name="message" required placeholder="Message"></textarea>
+  </label>
+
+  <div data-netlify-recaptcha="true"></div>
+
+  <button type="submit" class="btn">Send message</button>
+</form>
+
+<style>
+  .ct {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+    max-width: 42rem;
+  }
+  .ct__pair {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1rem;
+  }
+</style>

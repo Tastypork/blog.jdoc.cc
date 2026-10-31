@@ -1,0 +1,89 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getPublishedPosts, postUrl } from "../lib/posts";
+import { SITE } from "../lib/site";
+
+const latest = (await getPublishedPosts())[0];
+const writeHref = latest ? `${postUrl(latest)}#write` : "/#subscribe";
+---
+
+<BaseLayout
+  title={`Privacy — ${SITE.name}`}
+  description="What CrossWords collects when you subscribe or write to Joshua, and what it does not."
+  path="/privacy"
+  back
+>
+  <article class="privacy">
+    <div class="wrap sheet">
+      <header>
+        <h1>Privacy</h1>
+        <p class="privacy__updated">Last updated October 30, 2026</p>
+      </header>
+
+      <div class="prose">
+        <p>
+          {SITE.name} is a personal blog run by {SITE.author.name}. It is a static site: no accounts, no
+          comments, no advertising, no analytics scripts, and no tracking cookies.
+        </p>
+
+        <h2>What I collect</h2>
+        <p>
+          Only what you type into the two forms. The <strong>Subscribe</strong> form collects your email
+          address so I can tell you when a new post goes up. The <strong>Questions or comments</strong> form
+          collects your message and, if you choose to give them, your name and email so I can reply.
+        </p>
+
+        <h2>How it is handled</h2>
+        <p>
+          Both forms are processed by Netlify Forms, which hosts this site and emails each submission to
+          me. Netlify stores submissions on my behalf; see
+          <a href="https://www.netlify.com/privacy/" rel="noopener">Netlify's privacy policy</a>. The forms use
+          Google reCAPTCHA to filter spam, which is subject to the
+          <a href="https://policies.google.com/privacy" rel="noopener">Google Privacy Policy</a> and
+          <a href="https://policies.google.com/terms" rel="noopener">Terms of Service</a>.
+        </p>
+        <p>
+          Scripture references link to BibleGateway.com. Clicking one takes you to their site under their
+          own policies.
+        </p>
+
+        <h2>What I do not do</h2>
+        <p>
+          I don't sell, share, or trade email addresses or messages with anyone. I don't send anything
+          other than new-post notifications to subscribers.
+        </p>
+
+        <h2>Your choices</h2>
+        <p>
+          To unsubscribe or have your messages deleted, write to me through the
+          <a href={writeHref}>questions form</a> on any post, or reply to any email from me, and I'll take
+          care of it.
+        </p>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .privacy {
+    background: var(--ground);
+    padding-block: 2.5rem 3.5rem;
+  }
+  .sheet {
+    background: var(--card);
+    padding: 2rem 1.5rem 2.5rem;
+  }
+  .sheet h1 {
+    font-size: 1.75rem;
+  }
+  .privacy__updated {
+    color: var(--muted);
+    font-size: 0.8125rem;
+    margin: 0.4rem 0 1.5rem;
+  }
+  .prose h2 {
+    margin-top: 2rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+</style>

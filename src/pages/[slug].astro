@@ -1,0 +1,219 @@
+---
+import { Picture } from "astro:assets";
+import { render } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactForm from "../components/ContactForm.astro";
+import NewsletterForm from "../components/NewsletterForm.astro";
+import { getPostsInReadingOrder, postUrl, type Post } from "../lib/posts";
+import { SITE, formatDateTime, readingTime } from "../lib/site";
+
+export async function getStaticPaths() {
+  const posts = await getPostsInReadingOrder();
+  return posts.map((post, index) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      prev: posts[index - 1],
+      next: posts[index + 1]
+    }
+  }));
+}
+
+interface Props {
+  post: Post;
+  prev?: Post;
+  next?: Post;
+}
+
+const { post, prev, next } = Astro.props;
+const { Content } = await render(post);
+const minutes = readingTime(post.body ?? "");
+---
+
+<BaseLayout
+  title={`${post.data.title} — ${SITE.name}`}
+  description={post.data.description}
+  path={`/${post.id}`}
+  type="article"
+  image={post.data.heroImage}
+  imageAlt={post.data.heroAlt}
+  publishedTime={post.data.pubDate}
+  modifiedTime={post.data.updatedDate}
+  back
+>
+  <article class="article">
+    <section class="stage">
+      <Picture
+        src={post.data.heroImage}
+        width={1920}
+        height={1280}
+        widths={[640, 960, 1280, 1920]}
+        sizes="100vw"
+        formats={["avif", "webp"]}
+        alt={post.data.heroAlt}
+        class="stage__bg"
+        pictureAttributes={{ class: "stage__frame" }}
+        style={`object-position: ${post.data.heroPosition};`}
+        loading="eager"
+        fetchpriority="high"
+      />
+      <div class="sheet article__body">
+        <header class="article__head">
+          <h1>{post.data.title}</h1>
+          <p class="article__meta">
+            <span>by {SITE.author.name}</span>
+            <span aria-hidden="true"> · </span>
+            <time datetime={post.data.pubDate.toISOString()}>{formatDateTime(post.data.pubDate)}</time>
+            <span aria-hidden="true"> · </span>
+            <span>{minutes} min read</span>
+          </p>
+        </header>
+        <div class="prose">
+          <Content />
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap sheet sheet--form" id="write">
+      <h2>Questions or comments?</h2>
+      <p class="article__invite">Leave a message below with your email, or anonymously.</p>
+      <ContactForm idPrefix={`${post.id}-ct`} about={post.data.title} />
+    </div>
+
+    <div class="wrap sheet sheet--form" id="subscribe">
+      <h2>Get the next article</h2>
+      <p class="article__invite">One email when a new post goes up. Nothing else.</p>
+      <NewsletterForm idPrefix={`${post.id}-nl`} />
+    </div>
+
+    <nav class="wrap pager" aria-label="Other posts">
+      {
+        prev ? (
+          <a href={postUrl(prev)} class="pager__link">
+            <span>Previous</span>
+            {prev.data.title}
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        next ? (
+          <a href={postUrl(next)} class="pager__link pager__link--next">
+            <span>Next</span>
+            {next.data.title}
+          </a>
+        ) : (
+          <a href="/posts" class="pager__link pager__link--next">
+            <span>Index</span>
+            All posts
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .article {
+    background: var(--ground);
+    padding-block: 0 3.5rem;
+    display: grid;
+    gap: 1.75rem;
+  }
+  .stage {
+    position: relative;
+    background: var(--ink);
+  }
+  .stage__frame {
+    position: sticky;
+    top: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    margin: 0;
+  }
+  .stage__bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .sheet {
+    position: relative;
+    z-index: 1;
+    background: var(--card);
+  }
+  .article__body {
+    width: min(100% - 2rem, 46rem);
+    margin: -62vh auto clamp(1.75rem, 6vw, 4rem);
+    padding: 1.75rem 1.5rem 2.5rem;
+  }
+  .article__head {
+    display: grid;
+    gap: 0.65rem;
+    margin-bottom: 1.75rem;
+  }
+  .article__head h1 {
+    font-size: 1.375rem;
+    font-weight: 600;
+  }
+  .article__meta {
+    color: var(--muted);
+    font-size: 0.8125rem;
+    font-weight: 400;
+  }
+  .sheet--form {
+    padding: 2rem 1.5rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .sheet--form h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+  .article__invite {
+    color: var(--body);
+    margin-bottom: 0.5rem;
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding-block: 0.5rem 0;
+  }
+  .pager__link {
+    display: grid;
+    gap: 0.2rem;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .pager__link span {
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .pager__link--next {
+    text-align: right;
+  }
+  .pager__link:hover {
+    color: var(--accent);
+  }
+  @media (max-width: 40rem) {
+    .article {
+      padding-block: 0 2.5rem;
+    }
+    .article__body,
+    .sheet--form {
+      padding-inline: 1.15rem;
+    }
+    .pager {
+      grid-template-columns: 1fr;
+    }
+    .pager__link--next {
+      text-align: left;
+    }
+  }
+</style>

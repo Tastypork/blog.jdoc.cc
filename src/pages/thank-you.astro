@@ -1,0 +1,66 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getPublishedPosts, postUrl } from "../lib/posts";
+import { SITE } from "../lib/site";
+
+const latest = (await getPublishedPosts())[0];
+---
+
+<BaseLayout
+  title={`Got it — ${SITE.name}`}
+  description="Your message or subscription went through. Joshua will see it."
+  path="/thank-you"
+  noindex
+  back
+>
+  <section class="thanks">
+    <div class="wrap thanks__card">
+      <h1>Got it</h1>
+      <p>
+        It went through. If you wrote to me, I read every message and reply when you left an email. If
+        you subscribed, you'll hear from me when the next article goes up, and not before.
+      </p>
+      <div class="thanks__actions">
+        {latest && <a class="btn" href={postUrl(latest)}>Read the latest</a>}
+        <a class="btn btn--quiet" href="/">Back home</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .thanks {
+    background: var(--ground);
+    padding-block: 4rem;
+  }
+  .thanks__card {
+    background: var(--card);
+    padding: 2.5rem 1.75rem;
+    display: grid;
+    gap: 1rem;
+    max-width: 40rem;
+  }
+  .thanks h1 {
+    font-size: 1.75rem;
+  }
+  .thanks p {
+    color: var(--body);
+    max-width: 38rem;
+  }
+  .thanks__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  .btn--quiet {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+  }
+  .btn--quiet:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-btn);
+  }
+</style>

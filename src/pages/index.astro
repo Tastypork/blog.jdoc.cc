@@ -1,13 +1,204 @@
 ---
-import LegacyLayout from "../layouts/LegacyLayout.astro";
-import blogIndexBody from "../legacy/blog-index-body.html?raw";
+import { Image, Picture } from "astro:assets";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import NewsletterForm from "../components/NewsletterForm.astro";
+import { getLatestPosts, postUrl } from "../lib/posts";
+import { SITE, formatDate, readingTime } from "../lib/site";
+import wordmark from "../assets/brand/crosswords-logo-invert.png";
+// Jasmin Ne, Unsplash — https://unsplash.com/photos/6FEwTl93sLw
+import banner from "../assets/brand/hero-unsplash.jpg";
+
+const posts = await getLatestPosts();
 ---
 
-<LegacyLayout
-  title="CrossWords Blog"
-  description="Come check out some thoughts on biblically related topics."
-  canonicalPath="/"
-  headVariant="bloglist"
+<BaseLayout
+  title={`${SITE.name} — ${SITE.tagline}`}
+  description={SITE.description}
+  path="/"
 >
-  <div style="display:contents" set:html={blogIndexBody} />
-</LegacyLayout>
+  <section class="hero" aria-label="CrossWords">
+    <Picture
+      src={banner}
+      alt=""
+      width={1920}
+      height={900}
+      widths={[640, 1024, 1600, 1920]}
+      sizes="100vw"
+      formats={["avif", "webp"]}
+      quality={72}
+      class="hero__bg"
+      pictureAttributes={{ class: "hero__frame" }}
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="hero__shade" aria-hidden="true"></div>
+    <h1>
+      <Image
+        src={wordmark}
+        width={1000}
+        alt="CrossWords. Blog by Joshua O'Callaghan."
+        class="hero__mark"
+        loading="eager"
+      />
+    </h1>
+  </section>
+
+  <section class="journal" aria-label="Latest posts">
+    <div class="wrap journal__grid">
+      {
+        posts.map((post) => (
+          <article class="card">
+            <a href={postUrl(post)} class="card__photo" tabindex="-1" aria-hidden="true">
+              <Picture
+                src={post.data.heroImage}
+                width={720}
+                widths={[360, 720]}
+                sizes="(max-width: 40rem) 100vw, (max-width: 64rem) 50vw, 360px"
+                formats={["avif", "webp"]}
+                alt=""
+                style={`aspect-ratio: 3 / 2; object-fit: cover; object-position: ${post.data.heroPosition};`}
+                loading="lazy"
+              />
+            </a>
+            <div class="card__txt">
+              <h2>
+                <a href={postUrl(post)}>{post.data.title}</a>
+              </h2>
+              <p>{post.data.excerpt}</p>
+              <p class="card__meta">
+                <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+                <span aria-hidden="true"> · </span>
+                <span>{readingTime(post.body ?? "")} min read</span>
+              </p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="signup" id="subscribe" aria-labelledby="signup-title">
+    <div class="wrap signup__inner">
+      <h2 id="signup-title">Sign up for our Newsletter</h2>
+      <p>Get a notification when the latest article releases.</p>
+      <NewsletterForm idPrefix="index-nl" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 55vh;
+    min-height: 16rem;
+    overflow: hidden;
+    background-color: var(--ink);
+    padding: 2rem var(--gutter);
+  }
+  .hero__frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+  .hero__bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  .hero__shade {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: rgb(12 10 8 / 0.28);
+  }
+  .hero h1 {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    line-height: 0;
+  }
+  .hero__mark {
+    width: min(100%, 500px);
+    height: auto;
+  }
+
+  .journal {
+    background: var(--bg);
+    padding-block: 3.5rem 2.5rem;
+  }
+  .journal__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem 1.75rem;
+  }
+  .card__photo img {
+    width: 100%;
+  }
+  .card__txt {
+    padding-top: 1.5rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .card__txt h2 {
+    font-size: 1.1875rem;
+    font-weight: 500;
+    line-height: 1.35;
+    text-transform: uppercase;
+  }
+  .card__txt h2 a {
+    color: var(--ink);
+  }
+  .card__txt h2 a:hover {
+    color: var(--accent);
+  }
+  .card__txt p {
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: var(--body);
+  }
+  .card__meta {
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .signup {
+    background: var(--ground);
+    text-align: center;
+    padding-block: 3.5rem 2.5rem;
+  }
+  .signup__inner {
+    display: grid;
+    justify-items: center;
+    gap: 0.85rem;
+  }
+  .signup h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  .signup p {
+    color: var(--body);
+    margin-bottom: 0.5rem;
+  }
+
+  @media (max-width: 64rem) {
+    .journal__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 40rem) {
+    .journal {
+      padding-block: 2.5rem 1.5rem;
+    }
+    .journal__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

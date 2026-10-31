@@ -1,0 +1,51 @@
+---
+import { SITE } from "../lib/site";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="wrap footer__row">
+    <p>&copy; {year} {SITE.name}.</p>
+    <nav class="footer__nav" aria-label="Footer">
+      <a href="/privacy">Privacy</a>
+      <a href="https://jocal.dev" target="_blank" rel="noopener">
+        Web design done by Jocal<sup>&reg;</sup>
+      </a>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: auto;
+    background: var(--ground);
+    padding-block: 2.5rem;
+  }
+  .footer__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+  }
+  .footer p,
+  .footer a {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--body);
+  }
+  .footer a:hover {
+    color: var(--accent);
+  }
+  .footer__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.25rem;
+  }
+  .footer sup {
+    font-size: 0.6em;
+    line-height: 0;
+  }
+</style>

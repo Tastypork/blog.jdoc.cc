@@ -1,0 +1,15 @@
+---
+description: Visual design standards for Astro marketing websites
+globs: "src/**/*.{astro,css,scss,ts,js}"
+alwaysApply: false
+---
+- Before coding a page, identify its audience, primary conversion goal, brand personality, and content hierarchy from the brief.
+- Establish a coherent visual system before building sections: color tokens, type scale, spacing scale, content width, radii, borders, and shadows.
+- Favor strong typography, intentional whitespace, clear hierarchy, and a small number of purposeful accent colors over generic gradients and excessive cards.
+- Avoid cookie-cutter AI landing pages: do not default to a centered hero, purple gradient, three identical feature cards, and logo strip unless the brief supports that direction.
+- Make the first viewport communicate who the business helps, what it offers, why it is credible, and what the visitor should do next.
+- Use consistent alignment and spacing; keep line lengths comfortable and avoid overly wide paragraphs.
+- Design mobile layouts deliberately, not merely by shrinking desktop layouts. Check navigation, CTA visibility, text wrapping, images, and section rhythm.
+- Use existing design tokens and components where possible. Avoid one-off CSS values when a token is appropriate.
+- Use real client-provided images and copy when available. Do not fabricate awards, reviews, client logos, or portfolio work.
+- Prefer restrained transitions and respect prefers-reduced-motion. Ensure focus, hover, active, and disabled states are visible.

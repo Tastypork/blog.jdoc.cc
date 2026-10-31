@@ -1,0 +1,21 @@
+---
+import { HONEYPOT_FIELD } from "../lib/site";
+
+interface Props {
+  id: string;
+}
+const { id } = Astro.props;
+---
+
+<div class="hp" aria-hidden="true">
+  <label for={id}>Fax number</label>
+  <input
+    id={id}
+    name={HONEYPOT_FIELD}
+    type="text"
+    tabindex="-1"
+    autocomplete="off"
+    data-1p-ignore
+    data-lpignore="true"
+  />
+</div>
