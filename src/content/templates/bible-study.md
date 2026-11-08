@@ -1,18 +1,19 @@
 ---
-title: "TEST: Sample Bible Study (placeholder)"
-description: "Test post with placeholder copy so the Bible study layout can be checked live: cover photo, video slot, discussion summary, verses, and the newsletter signup."
-excerpt: "TEST placeholder for the Bible study layout. Safe to delete."
+title: "Template: Bible Study (placeholder)"
+description: "Unpublished template for a Bible study post: cover photo, video slot, discussion summary, verses, and the newsletter signup."
+excerpt: "Template for a Bible study post. Not published."
 pubDate: 2026-11-07T09:00:00-07:00
+# Unpublished template. This file lives outside src/content/posts, so the site does not build a page for it.
+# To publish a study, copy this file into src/content/posts/, set draft to false, and replace the placeholders.
 # Cover: Unsplash photo-1504052434569-70ad5836ab65 (open Bible, Unsplash License). Not a photo of Joshua.
-# Remove the test by deleting this file and src/assets/posts/test-sample-bible-study.jpg.
-heroImage: "../../assets/posts/test-sample-bible-study.jpg"
+heroImage: "../../assets/posts/template-bible-study.jpg"
 heroAlt: "Hands holding an open Bible turned to the book of Jeremiah"
 heroPosition: "50% 35%"
-kicker: "Test"
-draft: false
+kicker: "Template"
+draft: true
 ---
 
-**TEST post.** This is placeholder copy so the Bible study layout can be checked on the live site. It is safe to delete. The cover photo is the image above. Below are the study video, a summary of the discussion, and the verses referenced. The newsletter signup is the form already at the bottom of every post.
+**Template.** Placeholder copy for a Bible study post. It is not published. The cover photo is the hero image above. Below are the study video, a summary of the discussion, and the verses referenced. The newsletter signup is the form already at the bottom of every post.
 
 <h2 style="font-size: 1.1875rem; font-weight: 600; line-height: 1.35;">Study video</h2>
 
@@ -27,7 +28,7 @@ draft: false
       <p style="margin: 0; font-size: 1rem; font-weight: 600; line-height: 1.3; color: #ffffff;">Study video goes here</p>
     </div>
   </div>
-  <figcaption style="margin-top: 0.65rem; color: #a2a2a2; font-size: 0.8125rem; line-height: 1.5;">TEST placeholder. An unlisted YouTube video embeds in this frame. Not a real study video.</figcaption>
+  <figcaption style="margin-top: 0.65rem; color: #a2a2a2; font-size: 0.8125rem; line-height: 1.5;">Placeholder. An unlisted YouTube video embeds in this frame.</figcaption>
 </figure>
 
 <h2 style="font-size: 1.1875rem; font-weight: 600; line-height: 1.35;">What we discussed</h2>
