@@ -23,7 +23,7 @@ export type Announcement = {
 };
 
 /** America/Phoenix is UTC−7 all year. Posts before this local day are not announced. */
-export const DEFAULT_ANNOUNCE_AFTER = "2026-11-09";
+export const DEFAULT_ANNOUNCE_AFTER = "2026-11-01";
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
