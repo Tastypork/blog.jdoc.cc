@@ -45,7 +45,7 @@ function text(value: unknown): string | null {
   return typeof value === "string" ? value : null;
 }
 
-function httpsOrigin(value: unknown): string | null {
+export function httpsOrigin(value: unknown): string | null {
   if (typeof value !== "string") return null;
   try {
     const url = new URL(value);
