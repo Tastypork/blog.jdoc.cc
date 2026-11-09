@@ -37,14 +37,24 @@ export default async (req: Request) => {
     }
 
     // Discord uses this same list and does not check who confirmed email.
-    // Discord is posted first so a mail failure can retry without a second Discord post.
+    // Mail still goes out when Discord rejects the post. YukiBot ignores a slug it already announced.
     const discord: string[] = [];
+    const discordFailed: string[] = [];
     for (const announcement of announcements) {
-      await notifyDiscord(announcement.post);
-      discord.push(announcement.post.slug);
+      try {
+        await notifyDiscord(announcement.post);
+        discord.push(announcement.post.slug);
+      } catch (error) {
+        discordFailed.push(announcement.post.slug);
+        console.error("discord failed:", error instanceof Error ? error.message : "unknown");
+      }
       await sendAnnouncement(resend, announcement);
     }
-    return json({ sent: announcements.map((item) => item.post.slug), discord });
+    return json({
+      sent: announcements.map((item) => item.post.slug),
+      discord,
+      ...(discordFailed.length > 0 ? { discordFailed } : {})
+    });
   } catch (error) {
     console.error("notify failed:", error instanceof Error ? error.message : "unknown");
     return new Response("Could not finish", { status: 500 });
