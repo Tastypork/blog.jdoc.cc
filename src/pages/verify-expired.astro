@@ -1,0 +1,18 @@
+---
+import NoticeCard from "../components/NoticeCard.astro";
+---
+
+<NoticeCard
+  heading="That link expired"
+  description="That confirmation link is invalid or it expired."
+  path="/verify-expired"
+>
+  <p>That confirmation link is invalid or it expired. <a class="again" href="/thanks">Send yourself another one</a>.</p>
+</NoticeCard>
+
+<style>
+  .again {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+</style>

@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "generatedAt": "2026-10-30T14:58:00-07:00",
   "title": "Design System: CrossWords",
-  "description": "The existing CrossWords blog. White page, Poppins, steel blue accent, graffiti wordmark on the photo banner, journal cards. The crossword-puzzle treatment is retired.",
+  "description": "The existing CrossWords blog. Light page by default, with a dark mode on the same tokens. Poppins, steel blue accent, graffiti wordmark, journal cards. The crossword-puzzle treatment is retired.",
   "colors": {
     "bg": "#ffffff",
     "ground": "#f7f7f7",
@@ -15,7 +15,23 @@
     "line": "#e4e4e4",
     "btn": "#333333",
     "on-btn": "#ffffff",
-    "error": "#b3261e"
+    "error": "#b3261e",
+    "stage": "#292929"
+  },
+  "dark": {
+    "bg": "#141414",
+    "ground": "#0e0e0e",
+    "card": "#1c1c1c",
+    "quote": "#262626",
+    "ink": "#f3f3f3",
+    "body": "#c6c6c6",
+    "muted": "#9a9a9a",
+    "accent": "#7e96b8",
+    "line": "#3a3a3a",
+    "btn": "#f0f0f0",
+    "on-btn": "#141414",
+    "error": "#ffb4ab",
+    "stage": "#0a0a0a"
   },
   "typography": {
     "fontFamily": "Poppins, Helvetica, Arial, sans-serif"

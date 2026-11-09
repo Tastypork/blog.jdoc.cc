@@ -1,5 +1,6 @@
 /* CrossWords: the existing blog theme.
-   White page, Poppins, near-black titles, gray body, one steel-blue accent. */
+   Light page by default, Poppins, near-black titles, gray body, one steel-blue accent.
+   Dark mode swaps the same tokens. The photo stage stays dark in both. */
 
 @font-face {
   font-family: "Poppins";
@@ -56,6 +57,8 @@
   --line: #e4e4e4;
   --btn: #333333;
   --on-btn: #ffffff;
+  --error: #b3261e;
+  --stage: #292929;
 
   --font: "Poppins", Helvetica, Arial, sans-serif;
   --wrap: 1140px;
@@ -64,6 +67,42 @@
 
   color-scheme: light;
   accent-color: var(--accent);
+}
+
+html[data-theme="dark"] {
+  --bg: #141414;
+  --ground: #0e0e0e;
+  --card: #1c1c1c;
+  --quote: #262626;
+  --ink: #f3f3f3;
+  --body: #c6c6c6;
+  --muted: #9a9a9a;
+  --accent: #7e96b8;
+  --line: #3a3a3a;
+  --btn: #f0f0f0;
+  --on-btn: #141414;
+  --error: #ffb4ab;
+  --stage: #0a0a0a;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --bg: #141414;
+    --ground: #0e0e0e;
+    --card: #1c1c1c;
+    --quote: #262626;
+    --ink: #f3f3f3;
+    --body: #c6c6c6;
+    --muted: #9a9a9a;
+    --accent: #7e96b8;
+    --line: #3a3a3a;
+    --btn: #f0f0f0;
+    --on-btn: #141414;
+    --error: #ffb4ab;
+    --stage: #0a0a0a;
+    color-scheme: dark;
+  }
 }
 
 *,
@@ -80,6 +119,17 @@ html {
   line-height: 1.75;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body,
+  header,
+  footer,
+  main,
+  section,
+  article {
+    transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+  }
 }
 
 body {
@@ -163,14 +213,14 @@ p {
   transform: translateY(-120%);
   padding: 0.6rem 1rem;
   background: var(--ink);
-  color: #fff;
+  color: var(--bg);
   z-index: 100;
 }
 .skip-link:focus-visible {
   transform: none;
 }
 .skip-link:hover {
-  color: #fff;
+  color: var(--bg);
 }
 
 .wrap {
@@ -242,7 +292,7 @@ p {
 }
 .field input:user-invalid,
 .field textarea:user-invalid {
-  border-color: #b3261e;
+  border-color: var(--error);
 }
 
 .hp {

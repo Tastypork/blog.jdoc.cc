@@ -1,0 +1,32 @@
+---
+import Honeypot from "../components/Honeypot.astro";
+import NoticeCard from "../components/NoticeCard.astro";
+---
+
+<NoticeCard
+  heading="Thanks for signing up for email notifications"
+  description="Confirm your email to get a note when a new CrossWords post goes up."
+  path="/thanks"
+>
+  <p>Please verify your email to start receiving post notifications.</p>
+  <form class="resend" method="POST" action="/api/verify/resend">
+    <Honeypot id="thanks-fax" />
+    <label class="field" for="resend-email">
+      <span>Email</span>
+      <input id="resend-email" type="email" name="email" required autocomplete="email" placeholder="Enter your email" />
+    </label>
+    <button type="submit" class="btn">Resend verification email</button>
+  </form>
+</NoticeCard>
+
+<style>
+  .resend {
+    position: relative;
+    display: grid;
+    justify-items: start;
+    gap: 0.75rem;
+  }
+  .resend .field {
+    width: min(100%, 22rem);
+  }
+</style>

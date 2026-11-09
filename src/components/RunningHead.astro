@@ -1,10 +1,10 @@
 ---
 import { Image } from "astro:assets";
 import wordmark from "../assets/brand/crosswords-logo.png";
-import portrait from "../assets/brand/joshua-portrait.png";
+import wordmarkOnDark from "../assets/brand/crosswords-logo-invert.png";
 
 interface Props {
-  /** Article and utility pages use the portrait and a way home, matching the original subpage nav. */
+  /** Article and utility pages add a way home beside the wordmark. */
   back?: boolean;
 }
 
@@ -15,31 +15,48 @@ const onPosts = Astro.url.pathname === "/posts" || Astro.url.pathname === "/post
 <header class="nav">
   <div class="wrap nav__row">
     <a href="/" class="nav__brand" aria-label="CrossWords home">
-      {
-        back ? (
-          <Image
-            src={portrait}
-            width={120}
-            height={120}
-            alt=""
-            class="nav__portrait"
-            loading="eager"
-          />
-        ) : (
-          <Image
-            src={wordmark}
-            width={280}
-            alt=""
-            class="nav__mark"
-            loading="eager"
-          />
-        )
-      }
+      <Image
+        src={wordmark}
+        width={280}
+        alt=""
+        class="nav__mark nav__mark--light"
+        loading="eager"
+      />
+      <Image
+        src={wordmarkOnDark}
+        width={280}
+        alt=""
+        class="nav__mark nav__mark--dark"
+        loading="eager"
+      />
     </a>
-    <nav class="nav__links" aria-label="Site">
-      {back && <a href="/">Return Home</a>}
-      <a href="/posts" aria-current={onPosts ? "page" : undefined}>Posts</a>
-    </nav>
+    <div class="nav__tools">
+      <nav class="nav__links" aria-label="Site">
+        {back && <a href="/">Return Home</a>}
+        <a href="/posts" aria-current={onPosts ? "page" : undefined}>Posts</a>
+      </nav>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false">
+        <svg class="theme-toggle__icon theme-toggle__moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M20.5 14.8A8.2 8.2 0 0 1 9.2 3.5 8.2 8.2 0 1 0 20.5 14.8z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linejoin="round"></path>
+        </svg>
+        <svg class="theme-toggle__icon theme-toggle__sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="1.75"></circle>
+          <path
+            d="M12 3.2v1.8M12 19v1.8M4.9 4.9l1.3 1.3M17.8 17.8l1.3 1.3M3.2 12h1.8M19 12h1.8M4.9 19.1l1.3-1.3M17.8 6.2l1.3-1.3"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"></path>
+        </svg>
+        <span class="sr-only theme-toggle__name theme-toggle__name--to-dark">Switch to dark mode</span>
+        <span class="sr-only theme-toggle__name theme-toggle__name--to-light">Switch to light mode</span>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -59,16 +76,26 @@ const onPosts = Astro.url.pathname === "/posts" || Astro.url.pathname === "/post
     display: flex;
     align-items: center;
     line-height: 0;
+    min-width: 0;
   }
   .nav__mark {
     height: 3.25rem;
     width: auto;
   }
-  .nav__portrait {
-    width: 3.25rem;
-    height: 3.25rem;
-    border-radius: 50%;
-    object-fit: cover;
+  .nav__mark--dark {
+    display: none;
+  }
+  :global(html[data-theme="dark"]) .nav__mark--light {
+    display: none;
+  }
+  :global(html[data-theme="dark"]) .nav__mark--dark {
+    display: block;
+  }
+  .nav__tools {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex: none;
   }
   .nav__links {
     display: flex;
@@ -91,10 +118,58 @@ const onPosts = Astro.url.pathname === "/posts" || Astro.url.pathname === "/post
   .nav__links a[aria-current="page"]:hover {
     color: var(--accent);
   }
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease;
+  }
+  .theme-toggle:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .theme-toggle__icon {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+  .theme-toggle__sun,
+  .theme-toggle__name--to-light {
+    display: none;
+  }
+  :global(html[data-theme="dark"]) .theme-toggle__moon,
+  :global(html[data-theme="dark"]) .theme-toggle__name--to-dark {
+    display: none;
+  }
+  :global(html[data-theme="dark"]) .theme-toggle__sun {
+    display: block;
+  }
+  :global(html[data-theme="dark"]) .theme-toggle__name--to-light {
+    display: block;
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(html:not([data-theme="light"])) .nav__mark--light,
+    :global(html:not([data-theme="light"])) .theme-toggle__moon,
+    :global(html:not([data-theme="light"])) .theme-toggle__name--to-dark {
+      display: none;
+    }
+    :global(html:not([data-theme="light"])) .nav__mark--dark,
+    :global(html:not([data-theme="light"])) .theme-toggle__sun,
+    :global(html:not([data-theme="light"])) .theme-toggle__name--to-light {
+      display: block;
+    }
+  }
   @media (max-width: 40rem) {
     .nav__mark {
       height: 2.75rem;
     }
+    .nav__tools,
     .nav__links {
       gap: 0.85rem;
     }

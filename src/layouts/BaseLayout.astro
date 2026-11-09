@@ -27,9 +27,115 @@ const { back = false, bodyClass = "", ...seo } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      (() => {
+        let stored = null;
+        try {
+          stored = localStorage.getItem("theme");
+        } catch {
+          stored = null;
+        }
+        const theme =
+          stored === "light" || stored === "dark"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+      })();
+    </script>
     <SEO {...seo} />
-    <link rel="icon" href="/favicon.png" type="image/png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link
+      id="favicon-light"
+      rel="icon"
+      href="/favicon-light.png"
+      type="image/png"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      id="favicon-dark"
+      rel="icon"
+      href="/favicon-dark.png"
+      type="image/png"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link id="apple-touch-icon" rel="apple-touch-icon" href="/apple-touch-icon-light.png" />
+    <script is:inline>
+      (() => {
+        const storageKey = "theme";
+        const root = document.documentElement;
+
+        const readStored = () => {
+          try {
+            return localStorage.getItem(storageKey);
+          } catch {
+            return null;
+          }
+        };
+
+        const paintChrome = (theme) => {
+          const lightIcon = document.getElementById("favicon-light");
+          const darkIcon = document.getElementById("favicon-dark");
+          if (lightIcon) lightIcon.media = theme === "light" ? "all" : "not all";
+          if (darkIcon) darkIcon.media = theme === "dark" ? "all" : "not all";
+          const apple = document.getElementById("apple-touch-icon");
+          if (apple) {
+            apple.href = theme === "dark" ? "/apple-touch-icon-dark.png" : "/apple-touch-icon-light.png";
+          }
+          document.querySelectorAll('meta[name="theme-color"]').forEach((node) => {
+            if (!(node instanceof HTMLMetaElement)) return;
+            if (node.id === "theme-color") {
+              node.setAttribute("content", theme === "dark" ? "#141414" : "#ffffff");
+              node.removeAttribute("media");
+            } else {
+              node.setAttribute("media", "not all");
+            }
+          });
+          const toggle = document.getElementById("theme-toggle");
+          if (toggle) toggle.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+        };
+
+        const apply = (theme, persist) => {
+          root.dataset.theme = theme;
+          root.style.colorScheme = theme;
+          if (persist) {
+            try {
+              localStorage.setItem(storageKey, theme);
+            } catch {
+              /* private mode */
+            }
+          }
+          paintChrome(theme);
+        };
+
+        paintChrome(root.dataset.theme === "dark" ? "dark" : "light");
+
+        const bindToggle = () => {
+          const toggle = document.getElementById("theme-toggle");
+          if (!toggle) return;
+          toggle.setAttribute("aria-pressed", root.dataset.theme === "dark" ? "true" : "false");
+          toggle.addEventListener("click", () => {
+            apply(root.dataset.theme === "dark" ? "light" : "dark", true);
+          });
+        };
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", bindToggle);
+        } else {
+          bindToggle();
+        }
+
+        const stored = readStored();
+        if (stored !== "light" && stored !== "dark") {
+          window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (event) => {
+            const choice = readStored();
+            if (choice === "light" || choice === "dark") return;
+            apply(event.matches ? "dark" : "light", false);
+          });
+        }
+      })();
+    </script>
     <link rel="preload" href="/fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/poppins-500.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/poppins-600.woff2" as="font" type="font/woff2" crossorigin />

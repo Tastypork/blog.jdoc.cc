@@ -17,7 +17,7 @@ const writeHref = latest ? `${postUrl(latest)}#write` : "/#subscribe";
     <div class="wrap sheet">
       <header>
         <h1>Privacy</h1>
-        <p class="privacy__updated">Last updated October 30, 2026</p>
+        <p class="privacy__updated">Last updated November 9, 2026</p>
       </header>
 
       <div class="prose">
@@ -29,7 +29,8 @@ const writeHref = latest ? `${postUrl(latest)}#write` : "/#subscribe";
         <h2>What I collect</h2>
         <p>
           Only what you type into the two forms. The <strong>Subscribe</strong> form collects your email
-          address so I can tell you when a new post goes up. The <strong>Questions or comments</strong> form
+          address so I can tell you when a new post goes up. I send a confirmation email first, and I don't
+          add you to the new-post list until you open that link. The <strong>Questions or comments</strong> form
           collects your message and, if you choose to give them, your name and email so I can reply.
         </p>
 
@@ -43,21 +44,27 @@ const writeHref = latest ? `${postUrl(latest)}#write` : "/#subscribe";
           <a href="https://policies.google.com/terms" rel="noopener">Terms of Service</a>.
         </p>
         <p>
+          When you subscribe, I also store your email with
+          <a href="https://resend.com/legal/privacy-policy" rel="noopener">Resend</a>, which sends the
+          confirmation email and, after you confirm, the new-post notes. Each new-post email has an
+          unsubscribe link.
+        </p>
+        <p>
           Scripture references link to BibleGateway.com. Clicking one takes you to their site under their
           own policies.
         </p>
 
         <h2>What I do not do</h2>
         <p>
-          I don't sell, share, or trade email addresses or messages with anyone. I don't send anything
-          other than new-post notifications to subscribers.
+          I don't sell email addresses or messages. I don't send anything other than the confirmation
+          email and new-post notes to people who confirmed.
         </p>
 
         <h2>Your choices</h2>
         <p>
-          To unsubscribe or have your messages deleted, write to me through the
-          <a href={writeHref}>questions form</a> on any post, or reply to any email from me, and I'll take
-          care of it.
+          Each new-post email has an unsubscribe link. To have your address or messages deleted, write to
+          me through the <a href={writeHref}>questions form</a> on any post, or reply to any email from me,
+          and I'll take care of it.
         </p>
       </div>
     </div>

@@ -73,7 +73,8 @@ const jsonLd =
 <link rel="canonical" href={canonical} />
 {noindex && <meta name="robots" content="noindex, nofollow" />}
 <meta name="author" content={SITE.author.name} />
-<meta name="theme-color" content={SITE.themeColor} />
+<meta id="theme-color" name="theme-color" content={SITE.themeColor.light} />
+<meta name="theme-color" content={SITE.themeColor.dark} media="(prefers-color-scheme: dark)" />
 
 <meta property="og:type" content={type} />
 <meta property="og:site_name" content={SITE.name} />

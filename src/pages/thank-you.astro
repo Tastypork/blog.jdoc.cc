@@ -8,7 +8,7 @@ const latest = (await getPublishedPosts())[0];
 
 <BaseLayout
   title={`Got it — ${SITE.name}`}
-  description="Your message or subscription went through. Joshua will see it."
+  description="Your message went through. Joshua will see it."
   path="/thank-you"
   noindex
   back
@@ -17,8 +17,7 @@ const latest = (await getPublishedPosts())[0];
     <div class="wrap thanks__card">
       <h1>Got it</h1>
       <p>
-        It went through. If you wrote to me, I read every message and reply when you left an email. If
-        you subscribed, you'll hear from me when the next article goes up, and not before.
+        It went through. If you wrote to me, I read every message and reply when you left an email.
       </p>
       <div class="thanks__actions">
         {latest && <a class="btn" href={postUrl(latest)}>Read the latest</a>}

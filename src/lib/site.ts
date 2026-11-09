@@ -9,8 +9,11 @@ export const SITE = {
     url: "https://jocal.dev"
   },
   locale: "en_US",
-  /** Steel blue from the existing theme, used for theme-color */
-  themeColor: "#7e96b8"
+  /** Browser chrome. Follows the page, not the steel-blue accent. */
+  themeColor: {
+    light: "#ffffff",
+    dark: "#141414"
+  }
 } as const;
 
 export const NEWSLETTER_FORM = "newsletter";

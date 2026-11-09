@@ -7,7 +7,10 @@ export default defineConfig({
   output: "static",
   integrations: [
     sitemap({
-      filter: (page) => !page.includes("/thank-you")
+      filter: (page) =>
+        !["/thank-you", "/thanks", "/verified", "/verify-expired", "/verification-sent"].some((path) =>
+          page.includes(path)
+        )
     })
   ],
   markdown: {

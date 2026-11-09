@@ -74,16 +74,18 @@ const minutes = readingTime(post.body ?? "");
       </div>
     </section>
 
-    <div class="wrap sheet sheet--form" id="write">
-      <h2>Questions or comments?</h2>
-      <p class="article__invite">Leave a message below with your email, or anonymously.</p>
-      <ContactForm idPrefix={`${post.id}-ct`} about={post.data.title} />
-    </div>
+    <div class="wrap article__close">
+      <div class="sheet sheet--form" id="write">
+        <h2>Questions or comments?</h2>
+        <p class="article__invite">Leave a message below with your email, or anonymously.</p>
+        <ContactForm idPrefix={`${post.id}-ct`} about={post.data.title} />
+      </div>
 
-    <div class="wrap sheet sheet--form" id="subscribe">
-      <h2>Get the next article</h2>
-      <p class="article__invite">One email when a new post goes up. Nothing else.</p>
-      <NewsletterForm idPrefix={`${post.id}-nl`} />
+      <div class="sheet sheet--form" id="subscribe">
+        <h2>Get the next article</h2>
+        <p class="article__invite">One email when a new post goes up. Nothing else.</p>
+        <NewsletterForm idPrefix={`${post.id}-nl`} />
+      </div>
     </div>
 
     <nav class="wrap pager" aria-label="Other posts">
@@ -123,7 +125,7 @@ const minutes = readingTime(post.body ?? "");
   }
   .stage {
     position: relative;
-    background: var(--ink);
+    background: var(--stage);
   }
   .stage__frame {
     position: sticky;
@@ -200,6 +202,31 @@ const minutes = readingTime(post.body ?? "");
   }
   .pager__link:hover {
     color: var(--accent);
+  }
+  .article__close {
+    display: grid;
+    gap: 1.75rem;
+  }
+  @media (min-width: 64rem) {
+    .article__body {
+      width: min(100% - 4rem, var(--wrap));
+      padding: 2.75rem 3rem 3.25rem;
+    }
+    .article__body .prose {
+      max-width: none;
+    }
+    .article__head h1 {
+      font-size: 2.125rem;
+      line-height: 1.25;
+    }
+    .article__close {
+      grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.85fr);
+      align-items: start;
+      gap: 1.5rem;
+    }
+    .sheet--form {
+      padding: 2.25rem 2rem;
+    }
   }
   @media (max-width: 40rem) {
     .article {

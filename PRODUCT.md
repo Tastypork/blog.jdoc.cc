@@ -22,15 +22,16 @@ Not devotional content from an institution. Every post is Joshua speaking in the
 
 - Three published essays, each 900 to 1,400 words, written September 2024. More will follow irregularly.
 - Posts quote scripture frequently, inline, with translation labels (NIV, ESV, AMP). Pull quotes repeat a key sentence from the essay.
-- Readers reach Joshua through a contact form on each post and a newsletter sign-up on the index; both are Netlify Forms collectors emailing Joshua.
+- Readers reach Joshua through a contact form on each post and a newsletter sign-up on the index and on each post. Both are Netlify Forms. A subscriber gets a confirmation email, and only a confirmed address receives new-post mail through Resend.
 - Author also runs a personal/professional site at jocal.dev; the blog links there for attribution only.
 
 ## Capabilities and Constraints
 
 - Static Astro 5 site, Markdown content collection, deployed on Netlify at https://blog.jdoc.cc. No client framework; vanilla JS only where interaction requires it.
-- Forms: newsletter (email) and contact (name, email, message). Both need honeypot + Netlify reCAPTCHA checkbox and a `/thank-you` success page. Live submission can only be verified after a Netlify deploy with form detection enabled.
+- Forms: newsletter (email) and contact (name, email, message). Both need honeypot + Netlify reCAPTCHA checkbox. Newsletter success is `/thanks` and requires an email confirmation before post mail. Contact success is `/thank-you`. The resend-confirmation form posts to a site function, so it has the honeypot and not the Netlify reCAPTCHA widget. Live submission can only be verified after a Netlify deploy with form detection enabled.
+- New-post mail: Resend stores contacts and sends broadcasts to the confirmed segment. A production deploy webhook sends each new post once. A Discord notification can use that same webhook later and does not use the email confirmation gate.
 - Existing URLs `/jesus-christ`, `/waiting-faith`, `/walking-christ` must keep working; legacy `.html` paths redirect.
-- No comments, no analytics, no third-party newsletter service (undecided whether one will be added later).
+- No comments, no analytics.
 - Author photos are the only imagery: three travel photos used as post heroes (Oregon coast dock, Phoenix desert road, Medellin hillside), Joshua's headshot, and a posterized photo of him reading a red Bible. No stock imagery is to be invented as fact about Joshua.
 
 ## Brand Commitments
@@ -44,7 +45,7 @@ Not devotional content from an institution. Every post is Joshua speaking in the
 
 - `src/content/posts/*.md`: the three essays, verbatim from the original site, with original publish timestamps (MST).
 - `src/assets/posts/*.jpg`: Joshua's own hero photos (1024px wide, from the original site).
-- `src/assets/brand/joshua-portrait.png`: headshot. `src/assets/brand/crosswords-logo*.png`, `cw-bg*.jpg`: previous identity assets, kept for reference only.
+- `src/assets/brand/crosswords-logo*.png`, `cw-bg*.jpg`: previous identity assets, kept for reference only. The nav always uses the graffiti wordmark.
 - No testimonials, subscriber counts, or readership figures exist; none may be claimed.
 
 ## Product Principles
