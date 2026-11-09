@@ -6,6 +6,8 @@ export type FeedPost = {
   excerpt: string;
   url: string;
   pubDate: string;
+  /** Present when the post set one. */
+  kicker?: string;
 };
 
 export type KnownBroadcast = {
@@ -29,13 +31,21 @@ export function broadcastName(slug: string): string {
   return `post/${slug}`;
 }
 
-export function toFeedPost(post: { id: string; title: string; excerpt: string; pubDate: Date }): FeedPost {
+export function toFeedPost(post: {
+  id: string;
+  title: string;
+  excerpt: string;
+  pubDate: Date;
+  kicker?: string;
+}): FeedPost {
+  const kicker = readKicker(post.kicker);
   return {
     slug: post.id,
     title: post.title,
     excerpt: post.excerpt,
     url: new URL(`/${post.id}`, SITE.url).href,
-    pubDate: post.pubDate.toISOString()
+    pubDate: post.pubDate.toISOString(),
+    ...(kicker ? { kicker } : {})
   };
 }
 
@@ -81,11 +91,20 @@ function readFeedPost(value: unknown, siteUrl: string): FeedPost {
   if (typeof record.pubDate !== "string" || !Number.isFinite(Date.parse(record.pubDate))) {
     throw new Error("Feed date was invalid");
   }
+  const kicker = readKicker(record.kicker);
   return {
     slug: record.slug,
     title: record.title,
     excerpt: record.excerpt,
     url: record.url,
-    pubDate: record.pubDate
+    pubDate: record.pubDate,
+    ...(kicker ? { kicker } : {})
   };
+}
+
+function readKicker(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const kicker = value.trim();
+  if (kicker === "" || kicker.length > 80) return undefined;
+  return kicker;
 }

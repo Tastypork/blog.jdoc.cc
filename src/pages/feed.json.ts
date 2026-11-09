@@ -9,7 +9,8 @@ export const GET: APIRoute = async () => {
       id: post.id,
       title: post.data.title,
       excerpt: post.data.excerpt,
-      pubDate: post.data.pubDate
+      pubDate: post.data.pubDate,
+      kicker: post.data.kicker
     })
   );
   return new Response(JSON.stringify(feed), {
