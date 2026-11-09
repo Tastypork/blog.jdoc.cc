@@ -30,12 +30,8 @@ export default async (req: Request) => {
     }
 
     const result = await announceReadyDeploy(deploy.origin);
-    console.log(`notify sent=${result.sent.join(",") || "none"} discord=${result.discord.join(",") || "none"}`);
-    return json({
-      sent: result.sent,
-      discord: result.discord,
-      ...(result.discordFailed.length > 0 ? { discordFailed: result.discordFailed } : {})
-    });
+    console.log(`notify sent=${result.sent.join(",") || "none"}`);
+    return json({ sent: result.sent });
   } catch (error) {
     console.error("notify failed:", error instanceof Error ? error.message : "unknown");
     return new Response("Could not finish", { status: 500 });
