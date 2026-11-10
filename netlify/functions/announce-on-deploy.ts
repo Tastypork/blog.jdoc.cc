@@ -29,7 +29,9 @@ export default {
 
     try {
       const result = await announceReadyDeploy(origin);
-      console.log(`announce-on-deploy sent=${result.sent.join(",") || "none"}`);
+      console.log(
+        `announce-on-deploy sent=${result.sent.join(",") || "none"} discord=${result.discord.join(",") || "none"}`
+      );
     } catch (error) {
       console.error("announce-on-deploy failed:", error instanceof Error ? error.message : "unknown");
     }

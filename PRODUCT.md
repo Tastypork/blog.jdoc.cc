@@ -29,7 +29,7 @@ Not devotional content from an institution. Every post is Joshua speaking in the
 
 - Static Astro 5 site, Markdown content collection, deployed on Netlify at https://blog.jdoc.cc. No client framework; vanilla JS only where interaction requires it.
 - Forms: newsletter (email) and contact (name, email, message). Both need honeypot + Netlify reCAPTCHA checkbox. Newsletter success is `/thanks` and requires an email confirmation before post mail. Contact success is `/thank-you`. The resend-confirmation form posts to a site function, so it has the honeypot and not the Netlify reCAPTCHA widget. Live submission can only be verified after a Netlify deploy with form detection enabled.
-- New-post mail: Resend stores contacts and sends broadcasts to the confirmed segment. A production deploy sends each new post once.
+- New-post mail: Resend stores contacts and sends broadcasts to the confirmed segment. A production deploy sends each new post once, then POSTs that post to YukiBot. YukiBot ignores a slug it already announced.
 - Existing URLs `/jesus-christ`, `/waiting-faith`, `/walking-christ` must keep working; legacy `.html` paths redirect.
 - No comments, no analytics.
 - Author photos are the only imagery: three travel photos used as post heroes (Oregon coast dock, Phoenix desert road, Medellin hillside), Joshua's headshot, and a posterized photo of him reading a red Bible. No stock imagery is to be invented as fact about Joshua.
