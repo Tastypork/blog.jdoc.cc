@@ -12,6 +12,8 @@ interface Props {
   type?: "website" | "article";
   image?: ImageMetadata;
   imageAlt?: string;
+  /** CSS object-position used to crop the social image, matching the hero. */
+  imagePosition?: string;
   publishedTime?: Date;
   modifiedTime?: Date;
   noindex?: boolean;
@@ -24,6 +26,7 @@ const {
   type = "website",
   image = defaultOg,
   imageAlt = `${SITE.name} — ${SITE.tagline}`,
+  imagePosition = "50% 50%",
   publishedTime,
   modifiedTime,
   noindex = false
@@ -32,11 +35,22 @@ const {
 const site = Astro.site ?? new URL(SITE.url);
 const canonical = new URL(path, site).toString();
 
+/** Sharp cover crops accept gravity names, not CSS object-position. */
+const cropPosition = (objectPosition: string) => {
+  const match = objectPosition.match(/([\d.]+)%\s+([\d.]+)%/);
+  if (!match) return "centre";
+  const y = Number(match[2]);
+  if (y <= 35) return "north";
+  if (y >= 70) return "south";
+  return "centre";
+};
+
 const og = await getImage({
   src: image,
   width: 1200,
   height: 630,
   fit: "cover",
+  position: cropPosition(imagePosition),
   format: "jpg",
   quality: 82
 });
