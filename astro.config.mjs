@@ -3,7 +3,7 @@ import sitemap from "@astrojs/sitemap";
 import rehypeScripture from "./src/lib/rehype-scripture.ts";
 
 export default defineConfig({
-  site: "https://blog.jocal.dev",
+  site: "https://blog.jdoc.cc",
   output: "static",
   integrations: [
     sitemap({
