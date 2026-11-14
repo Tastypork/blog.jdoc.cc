@@ -14,6 +14,8 @@ interface Props {
   imageAlt?: string;
   /** CSS object-position used to crop the social image, matching the hero. */
   imagePosition?: string;
+  /** Dedicated social image. Emitted at its real size. Absent posts keep the hero crop. */
+  ogImage?: ImageMetadata;
   publishedTime?: Date;
   modifiedTime?: Date;
   noindex?: boolean;
@@ -27,6 +29,7 @@ const {
   image = defaultOg,
   imageAlt = `${SITE.name} — ${SITE.tagline}`,
   imagePosition = "50% 50%",
+  ogImage,
   publishedTime,
   modifiedTime,
   noindex = false
@@ -45,16 +48,26 @@ const cropPosition = (objectPosition: string) => {
   return "centre";
 };
 
-const og = await getImage({
-  src: image,
-  width: 1200,
-  height: 630,
-  fit: "cover",
-  position: cropPosition(imagePosition),
-  format: "jpg",
-  quality: 82
-});
-const ogUrl = new URL(og.src, site).toString();
+let ogSrc: string;
+let ogWidth = "1200";
+let ogHeight = "630";
+if (ogImage) {
+  ogSrc = ogImage.src;
+  ogWidth = String(ogImage.width);
+  ogHeight = String(ogImage.height);
+} else {
+  const cropped = await getImage({
+    src: image,
+    width: 1200,
+    height: 630,
+    fit: "cover",
+    position: cropPosition(imagePosition),
+    format: "jpg",
+    quality: 82
+  });
+  ogSrc = cropped.src;
+}
+const ogUrl = new URL(ogSrc, site).toString();
 
 const jsonLd =
   type === "article"
@@ -97,8 +110,8 @@ const jsonLd =
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />
 <meta property="og:image" content={ogUrl} />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
+<meta property="og:image:width" content={ogWidth} />
+<meta property="og:image:height" content={ogHeight} />
 <meta property="og:image:alt" content={imageAlt} />
 {publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
 {modifiedTime && <meta property="article:modified_time" content={modifiedTime.toISOString()} />}

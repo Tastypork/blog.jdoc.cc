@@ -4,6 +4,7 @@ description: "November 11 Bible study on two parables about prayer and persisten
 excerpt: "Two parables on prayer and persistence. Come to God boldly, and keep asking."
 pubDate: 2026-11-11T19:00:00-07:00
 heroImage: "../../assets/posts/ask-and-you-shall-receive.jpg"
+ogImage: "../../assets/posts/ask-and-you-shall-receive-og.jpg"
 heroAlt: "A highway curving ahead through green wooded hills under a bright blue sky with scattered clouds"
 heroPosition: "50% 60%"
 kicker: "Bible study"
