@@ -4,6 +4,7 @@ description: "November 3 Bible study on the parable of the sower: four soils, a 
 excerpt: "What kind of soil is your heart? The first study on the parables Jesus told."
 pubDate: 2026-11-03T19:00:00-07:00
 heroImage: "../../assets/posts/where-you-going-to-grow-your-bananas.jpg"
+ogImage: "../../assets/posts/where-you-going-to-grow-your-bananas-og.jpg"
 heroAlt: "Desert hillside at dusk, with saguaros, a stone wall in the foreground, and city lights beyond the ridge"
 heroPosition: "50% 42%"
 kicker: "Bible study"

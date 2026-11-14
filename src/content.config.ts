@@ -11,6 +11,8 @@ const posts = defineCollection({
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
       heroImage: image(),
+      /** Social share image, emitted at its real size. Falls back to a crop of heroImage. */
+      ogImage: image().optional(),
       heroAlt: z.string(),
       /** CSS object-position for the hero crop, e.g. "50% 45%" */
       heroPosition: z.string().default("50% 50%"),
