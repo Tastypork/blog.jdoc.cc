@@ -12,8 +12,6 @@ draft: false
 
 Ask and you shall receive. That is what I called this study. It is the next one in the short series on the parables Jesus told, and I think I have about fifteen of them lined up. I want us to go through them and talk about them together. We did this one on November 11, and it is two parables on prayer and persistence: the friend at midnight and the persistent widow.
 
-I did not prep as much as I should have, and partway through my power went out and I dropped off for a bit. Bear with the gap in the video.
-
 <h2 style="font-size: 1.1875rem; font-weight: 600; line-height: 1.35;">Study video</h2>
 
 <figure aria-label="Study video" style="margin: 0;">
