@@ -10,10 +10,14 @@ export type FeedPost = {
   kicker?: string;
 };
 
+export type BroadcastStatus = "draft" | "sent" | "queued" | "scheduled" | "canceled" | "other";
+
 export type KnownBroadcast = {
   id: string;
   name: string;
-  status: "draft" | "sent" | "queued";
+  status: BroadcastStatus;
+  /** Set when Resend already has a send time. A draft with this set is scheduled. */
+  scheduledAt?: string | null;
 };
 
 export type Announcement = {
@@ -62,8 +66,9 @@ export function readFeed(value: unknown, siteUrl: string): FeedPost[] {
 }
 
 /**
- * Posts that still need an email. A broadcast named for the slug means it was
- * already sent, unless that broadcast is still a draft.
+ * Posts that still need an email. One broadcast named post/{slug} is enough:
+ * sent, queued, scheduled, or any other non-draft counts as already handled.
+ * A draft that already carries a send time is scheduled, so it is not sent again.
  */
 export function postsToAnnounce(posts: FeedPost[], broadcasts: KnownBroadcast[], cutoffMs: number): Announcement[] {
   return posts
@@ -74,11 +79,16 @@ export function postsToAnnounce(posts: FeedPost[], broadcasts: KnownBroadcast[],
     .sort((a, b) => Date.parse(a.pubDate) - Date.parse(b.pubDate))
     .flatMap((post): Announcement[] => {
       const named = broadcasts.filter((broadcast) => broadcast.name === broadcastName(post.slug));
-      if (named.some((broadcast) => broadcast.status !== "draft")) return [];
+      if (named.some((broadcast) => broadcastHandled(broadcast))) return [];
       const draft = named.find((broadcast) => broadcast.status === "draft");
       if (draft) return [{ post, action: "send-draft", broadcastId: draft.id }];
       return [{ post, action: "create" }];
     });
+}
+
+function broadcastHandled(broadcast: KnownBroadcast): boolean {
+  if (broadcast.scheduledAt) return true;
+  return broadcast.status !== "draft";
 }
 
 function readFeedPost(value: unknown, siteUrl: string): FeedPost {

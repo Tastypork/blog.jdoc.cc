@@ -1,14 +1,16 @@
 ---
 import Honeypot from "../components/Honeypot.astro";
 import NoticeCard from "../components/NoticeCard.astro";
+import { SEND_WINDOW_OPEN_LABEL, SEND_WINDOW_RANGE_LABEL } from "../lib/send-window";
 ---
 
 <NoticeCard
   heading="Thanks for signing up for email notifications"
-  description="Confirm your email to get a note when a new CrossWords post goes up."
+  description={`Confirm your email to get a note when a new CrossWords post goes up. Confirmation mail goes out from ${SEND_WINDOW_RANGE_LABEL}.`}
   path="/thanks"
 >
   <p>Please verify your email to start receiving post notifications.</p>
+  <p>I send confirmation mail from {SEND_WINDOW_RANGE_LABEL}. Any other time, it arrives after {SEND_WINDOW_OPEN_LABEL}.</p>
   <form class="resend" method="POST" action="/api/verify/resend">
     <Honeypot id="thanks-fax" />
     <label class="field" for="resend-email">

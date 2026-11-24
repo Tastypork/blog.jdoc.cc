@@ -1,13 +1,15 @@
 const encoder = new TextEncoder();
-const TOKEN_TTL_SECONDS = 48 * 60 * 60;
+export const VERIFY_LINK_TTL_SECONDS = 48 * 60 * 60;
+export const VERIFY_LINK_TTL_HOURS = VERIFY_LINK_TTL_SECONDS / 3600;
 
-export async function signVerifyToken(email: string, secret: string, now = Date.now()): Promise<string> {
+/** `issuedAt` is when the 48 hours start. Pass the delivery time when the email is scheduled. */
+export async function signVerifyToken(email: string, secret: string, issuedAt = Date.now()): Promise<string> {
   const payload = encodeBase64Url(
     encoder.encode(
       JSON.stringify({
         email,
         purpose: "verify",
-        exp: Math.floor(now / 1000) + TOKEN_TTL_SECONDS
+        exp: Math.floor(issuedAt / 1000) + VERIFY_LINK_TTL_SECONDS
       })
     )
   );

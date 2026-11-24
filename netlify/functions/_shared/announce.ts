@@ -1,5 +1,6 @@
 import { announceCutoff, postsToAnnounce, readFeed } from "../../../src/lib/feed";
 import { SITE } from "../../../src/lib/site";
+import { mailDelivery } from "../../../src/lib/send-window";
 import { notifyDiscord } from "./discord";
 import { optionalEnv } from "./http";
 import { listBroadcastNames, resendClient, sendAnnouncement } from "./subscribers";
@@ -10,12 +11,15 @@ export type AnnounceResult = {
   sent: string[];
   discord: string[];
   discordFailed: string[];
+  /** When Resend will release the broadcasts, or null when they go out now. */
+  scheduledAt: string | null;
 };
 
 /**
- * Email confirmed subscribers about posts that do not have a sent broadcast yet.
+ * Email confirmed subscribers about posts that do not already have a broadcast.
+ * Outside 5:00 AM to 5:00 PM Phoenix time, Resend holds that mail until the next 5:00 AM.
  * POST every post on or after the cutoff to YukiBot. YukiBot drops a slug it already announced,
- * so an email that already went out can still reach Discord.
+ * so an email that already went out can still reach Discord. The Discord ping is not held for the mail window.
  */
 export async function announceReadyDeploy(origin: string, send = true): Promise<AnnounceResult> {
   const feedUrl = new URL("/feed.json", origin);
@@ -40,6 +44,7 @@ export async function announceReadyDeploy(origin: string, send = true): Promise<
 
   const discord: string[] = [];
   const discordFailed: string[] = [];
+  let scheduledAt: string | null = null;
   if (send) {
     for (const post of discordPosts) {
       try {
@@ -51,9 +56,13 @@ export async function announceReadyDeploy(origin: string, send = true): Promise<
         console.error("discord failed:", error instanceof Error ? error.message : "unknown");
       }
     }
+    const mailedAt = new Date();
+    if (announcements.length > 0) scheduledAt = mailDelivery(mailedAt).scheduledAt;
     for (const announcement of announcements) {
-      await sendAnnouncement(resend, announcement);
+      await sendAnnouncement(resend, announcement, mailedAt);
     }
+  } else if (announcements.length > 0) {
+    scheduledAt = mailDelivery(new Date()).scheduledAt;
   }
 
   return {
@@ -61,6 +70,7 @@ export async function announceReadyDeploy(origin: string, send = true): Promise<
     cutoff,
     sent: announcements.map((item) => item.post.slug),
     discord,
-    discordFailed
+    discordFailed,
+    scheduledAt
   };
 }

@@ -29,8 +29,9 @@ export default {
 
     try {
       const result = await announceReadyDeploy(origin);
+      const mailAt = result.sent.length === 0 ? "none" : (result.scheduledAt ?? "now");
       console.log(
-        `announce-on-deploy sent=${result.sent.join(",") || "none"} discord=${result.discord.join(",") || "none"}`
+        `announce-on-deploy sent=${result.sent.join(",") || "none"} mailAt=${mailAt} discord=${result.discord.join(",") || "none"}`
       );
     } catch (error) {
       console.error("announce-on-deploy failed:", error instanceof Error ? error.message : "unknown");
