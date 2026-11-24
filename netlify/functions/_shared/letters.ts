@@ -1,6 +1,8 @@
 import { SITE } from "../../../src/lib/site";
+import { VERIFY_LINK_TTL_HOURS } from "./token";
 
 const font = "Poppins, Helvetica, Arial, sans-serif";
+const expiry = `This link expires in ${VERIFY_LINK_TTL_HOURS} hours. If you didn't ask for this, you can ignore it.`;
 
 export function confirmationLetter(confirmUrl: string): { subject: string; html: string; text: string } {
   const subject = "Confirm your CrossWords email";
@@ -11,7 +13,7 @@ export function confirmationLetter(confirmUrl: string): { subject: string; html:
     "",
     confirmUrl,
     "",
-    "This link expires in 48 hours. If you didn't ask for this, you can ignore it."
+    expiry
   ].join("\n");
   const html = layout({
     preheader: "Confirm this address and I'll write when a new post goes up.",
@@ -19,7 +21,7 @@ export function confirmationLetter(confirmUrl: string): { subject: string; html:
       paragraph("Joshua here."),
       paragraph("Confirm this address and I'll send you a note when a new post goes up."),
       button(confirmUrl, "Confirm this address"),
-      note("This link expires in 48 hours. If you didn't ask for this, you can ignore it.")
+      note(expiry)
     ].join("")
   });
   return { subject, html, text };

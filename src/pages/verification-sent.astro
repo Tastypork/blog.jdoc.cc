@@ -1,11 +1,13 @@
 ---
 import NoticeCard from "../components/NoticeCard.astro";
+import { SEND_WINDOW_OPEN_LABEL, SEND_WINDOW_RANGE_LABEL } from "../lib/send-window";
 ---
 
 <NoticeCard
   heading="Check your inbox"
-  description="If that address is still waiting on a confirmation link, another one is on the way."
+  description={`If that address is still waiting on a confirmation link, another one is on the way. Mail goes out from ${SEND_WINDOW_RANGE_LABEL}.`}
   path="/verification-sent"
 >
   <p>If that address is still waiting on a link, another one is on the way.</p>
+  <p>I send these from {SEND_WINDOW_RANGE_LABEL}. Any other time, yours arrives after {SEND_WINDOW_OPEN_LABEL}.</p>
 </NoticeCard>

@@ -3,8 +3,9 @@ import { SITE } from "../../../src/lib/site";
 import { requireEnv } from "./http";
 import { confirmationLetter, postLetter } from "./letters";
 import { signVerifyToken } from "./token";
-import type { Announcement } from "../../../src/lib/feed";
+import type { Announcement, BroadcastStatus, KnownBroadcast } from "../../../src/lib/feed";
 import { broadcastName } from "../../../src/lib/feed";
+import { mailDelivery } from "../../../src/lib/send-window";
 
 type ResendError = {
   message: string;
@@ -60,13 +61,30 @@ export async function confirmSubscription(resend: Resend, email: string): Promis
   if (added.error && !(await contactInSegment(resend, email, segmentId))) throw resendFailure(added.error);
 }
 
-export async function listBroadcastNames(resend: Resend): Promise<{ id: string; name: string; status: "draft" | "sent" | "queued" }[]> {
-  const found: { id: string; name: string; status: "draft" | "sent" | "queued" }[] = [];
+const BROADCAST_STATUSES = ["draft", "sent", "queued", "scheduled", "canceled"] as const;
+
+export function toKnownBroadcast(item: {
+  id: string;
+  name: string;
+  status: string;
+  scheduled_at?: string | null;
+}): KnownBroadcast {
+  const scheduledAt = item.scheduled_at?.trim() || null;
+  const known = (BROADCAST_STATUSES as readonly string[]).includes(item.status);
+  let status: BroadcastStatus;
+  if (item.status === "draft" && scheduledAt) status = "scheduled";
+  else if (known) status = item.status as BroadcastStatus;
+  else status = "other";
+  return { id: item.id, name: item.name, status, scheduledAt };
+}
+
+export async function listBroadcastNames(resend: Resend): Promise<KnownBroadcast[]> {
+  const found: KnownBroadcast[] = [];
   let after: string | undefined;
   for (let page = 0; page < 20; page += 1) {
     const { data, error } = await resend.broadcasts.list(after ? { limit: 100, after } : { limit: 100 });
     if (error || !data) throw resendFailure(error ?? emptyListError());
-    found.push(...data.data.map((item) => ({ id: item.id, name: item.name, status: item.status })));
+    found.push(...data.data.map((item) => toKnownBroadcast(item)));
     if (!data.has_more) return found;
     const cursor = data.data.at(-1)?.id;
     if (!cursor) throw new Error("Resend list missing cursor");
@@ -75,18 +93,23 @@ export async function listBroadcastNames(resend: Resend): Promise<{ id: string; 
   throw new Error("Resend list did not end");
 }
 
-export async function sendAnnouncement(resend: Resend, announcement: Announcement): Promise<void> {
+export async function sendAnnouncement(resend: Resend, announcement: Announcement, now = new Date()): Promise<void> {
+  const delivery = mailDelivery(now);
+  const name = broadcastName(announcement.post.slug);
   if (announcement.action === "send-draft") {
     if (!announcement.broadcastId) throw new Error("Draft broadcast was missing an id");
-    const sent = await resend.broadcasts.send(announcement.broadcastId);
+    const sent = delivery.scheduledAt
+      ? await resend.broadcasts.send(announcement.broadcastId, { scheduledAt: delivery.scheduledAt })
+      : await resend.broadcasts.send(announcement.broadcastId);
     if (sent.error) throw resendFailure(sent.error);
+    console.log(`broadcast ${name} mailAt=${delivery.scheduledAt ?? "now"}`);
     return;
   }
 
   const letter = postLetter(announcement.post);
   const from = requireEnv("RESEND_FROM");
-  const created = await resend.broadcasts.create({
-    name: broadcastName(announcement.post.slug),
+  const payload = {
+    name,
     segmentId: requireEnv("RESEND_SEGMENT_ID"),
     topicId: requireEnv("RESEND_TOPIC_ID"),
     from,
@@ -95,13 +118,18 @@ export async function sendAnnouncement(resend: Resend, announcement: Announcemen
     html: letter.html,
     text: letter.text,
     ...(letter.previewText ? { previewText: letter.previewText } : {}),
-    send: true
-  });
+    send: true as const
+  };
+  const created = await resend.broadcasts.create(
+    delivery.scheduledAt ? { ...payload, scheduledAt: delivery.scheduledAt } : payload
+  );
   if (created.error) throw resendFailure(created.error);
+  console.log(`broadcast ${name} mailAt=${delivery.scheduledAt ?? "now"}`);
 }
 
 async function sendConfirmationEmail(resend: Resend, email: string, submissionId: string | null): Promise<void> {
-  const token = await signVerifyToken(email, requireEnv("LINK_SECRET"));
+  const delivery = mailDelivery(new Date());
+  const token = await signVerifyToken(email, requireEnv("LINK_SECRET"), delivery.tokenFrom);
   const url = new URL("/api/verify", SITE.url);
   url.searchParams.set("token", token);
   const letter = confirmationLetter(url.toString());
@@ -113,11 +141,15 @@ async function sendConfirmationEmail(resend: Resend, email: string, submissionId
       to: email,
       subject: letter.subject,
       html: letter.html,
-      text: letter.text
+      text: letter.text,
+      ...(delivery.scheduledAt ? { scheduledAt: delivery.scheduledAt } : {})
     },
     submissionId ? { idempotencyKey: `verify/${submissionId}` } : undefined
   );
-  if (!sent.error) return;
+  if (!sent.error) {
+    console.log(`confirmation mailAt=${delivery.scheduledAt ?? "now"}`);
+    return;
+  }
   if (sent.error.name === "invalid_idempotent_request" || sent.error.name === "concurrent_idempotent_requests") return;
   throw resendFailure(sent.error);
 }

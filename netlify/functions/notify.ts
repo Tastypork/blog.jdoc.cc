@@ -25,15 +25,20 @@ export default async (req: Request) => {
       const result = await announceReadyDeploy(deploy.origin, false);
       return json({
         posts: result.sent.map((slug) => ({ slug })),
-        cutoff: result.cutoff
+        cutoff: result.cutoff,
+        ...(result.scheduledAt ? { scheduledAt: result.scheduledAt } : {})
       });
     }
 
     const result = await announceReadyDeploy(deploy.origin);
-    console.log(`notify sent=${result.sent.join(",") || "none"} discord=${result.discord.join(",") || "none"}`);
+    const mailAt = result.sent.length === 0 ? "none" : (result.scheduledAt ?? "now");
+    console.log(
+      `notify sent=${result.sent.join(",") || "none"} mailAt=${mailAt} discord=${result.discord.join(",") || "none"}`
+    );
     return json({
       sent: result.sent,
       discord: result.discord,
+      ...(result.scheduledAt ? { scheduledAt: result.scheduledAt } : {}),
       ...(result.discordFailed.length > 0 ? { discordFailed: result.discordFailed } : {})
     });
   } catch (error) {
